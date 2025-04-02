@@ -191,6 +191,18 @@ return {
     end,
   },
 
+  -- Obsidian
+  {
+    'epwalsh/obsidian.nvim',
+    version = "*",
+    lazy = true,
+    ft = 'markdown',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    }
+    -- TODO: Add workspaces
+  },
+
   -- Markdown Previewer
   {
     'iamcco/markdown-preview.nvim',
@@ -215,12 +227,25 @@ return {
           lua = { 'stylua' },
           go = { 'gopls', 'gofumpt', 'goimports-reviser', 'golines' },
           markdown = { 'markdownlint', 'marksman' },
+          json = { 'jq' },
         },
-        format_on_save = {
-          timeout_ms = 500,
-          lsp_format = 'fallback',
-        },
+        format_on_save = function(bufnr)
+          if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+            return
+          end
+          return { timeout_ms = 1000, lsp_format = 'fallback' }
+        end,
       }
+
+      vim.api.nvim_create_user_command('FormatToggle', function ()
+        if vim.g.disable_autoformat == true then
+          vim.g.disable_autoformat = false
+        else
+          vim.g.disable_autoformat = true
+        end
+      end, {
+          desc = 'Toggle formatting in this buffer',
+        })
     end,
   },
   -- Status Bar
@@ -251,5 +276,27 @@ return {
     --   vim.keymap.set('n', '<S-Tab>', '<cmd>BufferPrevious<CR>', { desc = 'Prev buffer' })
     -- end,
     version = '^1.0.0', -- optional: only update when a new 1.x version is released
+  },
+
+  -- Code Screenshots
+  {
+    'mistricky/codesnap.nvim',
+    build = 'make',
+    config = function()
+      require('codesnap').setup {
+        has_breadcrumbs = true,
+        bg_theme = 'grape',
+        watermark = '',
+      }
+    end,
+  },
+
+  -- Emojis(very important for Zoomers)
+  {
+    'xiyaowong/telescope-emoji.nvim',
+    config = function ()
+      require('telescope').load_extension 'emoji'
+      vim.keymap.set('n', '<leader>se', '<cmd>Telescope emoji<CR>', { desc = '[S]earch for [E]mojis'} )
+    end
   },
 }

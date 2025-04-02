@@ -28,5 +28,9 @@ opt.expandtab = true
 vim.keymap.set('i', '<M-BS>', '<C-w>', { desc = 'Option backspace while typing' })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Keep centered when jumping down' })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Keep centered when jumping up' })
+vim.keymap.set('n', '<Enter>', 'o<Esc>', { desc = 'insert line below' })
+vim.keymap.set('n', '<S-Enter>', 'O<Esc>', { desc = 'insert line above' })
 
 vim.cmd 'NvimTreeToggle'
+
+vim.keymap.set('n', 's', '<nop>', { desc = 'unmap "s" for easier surround usage' })

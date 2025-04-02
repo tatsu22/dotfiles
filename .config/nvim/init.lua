@@ -164,6 +164,9 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagn
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
+vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<CR>', { desc = 'Close[x] the current buffer' })
+vim.keymap.set('n', '<leader>X', '<cmd>BufferClose!<CR>', { desc = 'Super Close[X] the current buffer' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -274,17 +277,19 @@ require('lazy').setup({
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
-
-      -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      require('which-key').setup {
+        { "<leader>c", group = "[C]ode" },
+        { "<leader>c_", hidden = true },
+        { "<leader>d", group = "[D]ocument" },
+        { "<leader>d_", hidden = true },
+        { "<leader>r", group = "[R]ename" },
+        { "<leader>r_", hidden = true },
+        { "<leader>s", group = "[S]earch" },
+        { "<leader>s_", hidden = true },
+        { "<leader>w", group = "[W]orkspace" },
+        { "<leader>w_", hidden = true },
       }
-    end,
+      end,
   },
 
   -- NOTE: Plugins can specify dependencies.
@@ -349,7 +354,20 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
-        -- pickers = {}
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+          live_grep = {
+            hidden = true,
+            additional_args = function()
+              return { '--hidden' }
+            end,
+          },
+          grep_string = {
+            hidden = true,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -547,7 +565,7 @@ require('lazy').setup({
           root_dir = util.root_pattern('go.work', 'go.mod', '.git'),
           settings = {
             gopls = {
-              buildFlags = { '-tags=integration inttest pgintegration unix rdintegration' },
+              buildFlags = {},
               completeUnimported = true,
               usePlaceholders = true,
               analyses = {
@@ -571,12 +589,12 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {
-          -- on_attach = on_attach,
-          filetypes = { 'typescript', 'typescriptreact', 'typescript.tsx' },
-          cmd = { 'typescript-language-server', '--stdio' },
-          root_dir = util.root_pattern 'package.json',
-        },
+        -- tsserver = {
+        --   -- on_attach = on_attach,
+        --   filetypes = { 'typescript', 'typescriptreact', 'typescript.tsx' },
+        --   cmd = { 'typescript-language-server', '--stdio' },
+        --   root_dir = util.root_pattern 'package.json',
+        -- },
         --
 
         lua_ls = {
@@ -626,6 +644,9 @@ require('lazy').setup({
         -- c/cpp stuff
         -- 'clangd',
         -- 'clang-format',
+        -- TODO: get markdown one working
+        -- 'markdownlint',
+        -- 'marksman',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -656,25 +677,25 @@ require('lazy').setup({
     end,
   },
 
-  -- { -- Autoformat
-  --   'stevearc/conform.nvim',
-  --   opts = {
-  --     notify_on_error = false,
-  --     format_on_save = {
-  --       timeout_ms = 500,
-  --       lsp_fallback = true,
-  --     },
-  --     formatters_by_ft = {
-  --       lua = { 'stylua' },
-  --       -- Conform can also run multiple formatters sequentially
-  --       -- python = { "isort", "black" },
-  --       --
-  --       -- You can use a sub-list to tell conform to run *until* a formatter
-  --       -- is found.
-  --       -- javascript = { { "prettierd", "prettier" } },
-  --     },
-  --   },
-  -- },
+  { -- Autoformat
+    'stevearc/conform.nvim',
+    opts = {
+      notify_on_error = false,
+      format_on_save = {
+        timeout_ms = 2000,
+        lsp_fallback = true,
+      },
+      formatters_by_ft = {
+        lua = { 'stylua' },
+        -- Conform can also run multiple formatters sequentially
+        -- python = { "isort", "black" },
+        --
+        -- You can use a sub-list to tell conform to run *until* a formatter
+        -- is found.
+        -- javascript = { { "prettierd", "prettier" } },
+      },
+    },
+  },
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',

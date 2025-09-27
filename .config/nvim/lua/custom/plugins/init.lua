@@ -194,12 +194,12 @@ return {
   -- Obsidian
   {
     'epwalsh/obsidian.nvim',
-    version = "*",
+    version = '*',
     lazy = true,
     ft = 'markdown',
     dependencies = {
       'nvim-lua/plenary.nvim',
-    }
+    },
     -- TODO: Add workspaces
   },
 
@@ -237,15 +237,15 @@ return {
         end,
       }
 
-      vim.api.nvim_create_user_command('FormatToggle', function ()
+      vim.api.nvim_create_user_command('FormatToggle', function()
         if vim.g.disable_autoformat == true then
           vim.g.disable_autoformat = false
         else
           vim.g.disable_autoformat = true
         end
       end, {
-          desc = 'Toggle formatting in this buffer',
-        })
+        desc = 'Toggle formatting in this buffer',
+      })
     end,
   },
   -- Status Bar
@@ -291,12 +291,16 @@ return {
     end,
   },
 
+  {
+    'bakudankun/pico-8.vim',
+  },
+
   -- Emojis(very important for Zoomers)
   {
     'xiyaowong/telescope-emoji.nvim',
-    config = function ()
+    config = function()
       require('telescope').load_extension 'emoji'
-      vim.keymap.set('n', '<leader>se', '<cmd>Telescope emoji<CR>', { desc = '[S]earch for [E]mojis'} )
-    end
+      vim.keymap.set('n', '<leader>se', '<cmd>Telescope emoji<CR>', { desc = '[S]earch for [E]mojis' })
+    end,
   },
 }

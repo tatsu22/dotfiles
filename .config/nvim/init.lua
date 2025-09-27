@@ -567,7 +567,7 @@ require('lazy').setup({
           root_dir = util.root_pattern('go.work', 'go.mod', '.git'),
           settings = {
             gopls = {
-              buildFlags = {},
+              buildFlags = {"-tags=integration"},
               completeUnimported = true,
               usePlaceholders = true,
               analyses = {
@@ -601,7 +601,7 @@ require('lazy').setup({
 
         lua_ls = {
           -- cmd = {...},
-          -- filetypes { ...},
+          -- filetypes = { 'lua', 'p8', 'pico' },
           -- capabilities = {},
           settings = {
             Lua = {
@@ -612,6 +612,13 @@ require('lazy').setup({
               -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
+        },
+
+        pico8_ls = {
+          cmd = { "pico8-ls", "--stdio" },
+          filetypes = { "pico8", "p8" },
+          -- root_dir = function(fname) return vim.fs.dirname(fname) end,
+          settings = {},
         },
       }
 
@@ -634,6 +641,7 @@ require('lazy').setup({
         -- lua stuff
         'lua-language-server',
         'stylua',
+        'pico8-ls',
 
         -- web dev stuff
         'css-lsp',
@@ -664,6 +672,7 @@ require('lazy').setup({
           end,
         },
       }
+      require('lspconfig')["gopls"].setup(servers["gopls"])
 
       -- Diagnostic options
       vim.diagnostic.config {

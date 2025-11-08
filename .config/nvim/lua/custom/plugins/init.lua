@@ -4,6 +4,13 @@
 -- See the kickstart.nvim README for more information
 return {
 
+  {
+    'nvim-tree/nvim-web-devicons',
+    opts = {
+      lazy = false,
+    },
+  },
+
   -- Status line
   {
     'nvim-lualine/lualine.nvim',
@@ -25,7 +32,7 @@ return {
       end
       require('lualine').setup {
         options = {
-          theme = 'eldritch',
+          theme = 'tokyonight',
         },
         sections = {
           lualine_x = { clients_lsp, 'filetype' },
@@ -127,6 +134,7 @@ return {
         dotfiles = false,
         custom = {
           '^.git$',
+          '.*.uid$',
         },
       },
     },
@@ -291,9 +299,9 @@ return {
     end,
   },
 
-  {
-    'bakudankun/pico-8.vim',
-  },
+  -- {
+  --   'bakudankun/pico-8.vim',
+  -- },
 
   -- Emojis(very important for Zoomers)
   {

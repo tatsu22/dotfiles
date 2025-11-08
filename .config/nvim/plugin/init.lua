@@ -23,13 +23,16 @@ opt.colorcolumn = '120'
 opt.tabstop = 4
 opt.softtabstop = 4
 opt.shiftwidth = 4
-opt.expandtab = true
+opt.expandtab = false
+opt.relativenumber = true
 
 vim.keymap.set('i', '<M-BS>', '<C-w>', { desc = 'Option backspace while typing' })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Keep centered when jumping down' })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Keep centered when jumping up' })
 vim.keymap.set('n', '<Enter>', 'o<Esc>', { desc = 'insert line below' })
 vim.keymap.set('n', '<S-Enter>', 'O<Esc>', { desc = 'insert line above' })
+vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<CR>', { desc = 'Close[x] the current buffer' })
+vim.keymap.set('n', '<leader>X', '<cmd>BufferClose!<CR>', { desc = 'Super Close[X] the current buffer' })
 
 vim.cmd 'NvimTreeToggle'
 

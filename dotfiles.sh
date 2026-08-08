@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+# Install in case this is a fresh computer
+echo "=================="
+echo "Installing apps..."
+echo "=================="
+sudo apt update
+sudo apt install zsh fzf ripgrep git tmux
+
+sudo add-apt-repository ppa:neovim-ppa/stable
+sudo apt update
+sudo apt install neovim
+
+echo "==============="
+echo "cloning repo..."
+echo "==============="
 git clone --bare git@github.com:tatsu22/dotfiles.git $HOME/.dotfiles
 
 # define config alias locally since the dotfiles
@@ -23,3 +37,11 @@ fi
 # checkout dotfiles from repo
 config checkout
 config config status.showUntrackedFiles no
+
+# Setup tmux
+echo "=================="
+echo "Setting up tmux..."
+echo "=================="
+
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+

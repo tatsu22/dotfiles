@@ -175,6 +175,8 @@ vim.o.confirm = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic Message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic Message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -199,6 +201,9 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<leader>x', '<cmd>bdelete<CR>', { desc = 'Close[x] the current buffer' })
+vim.keymap.set('n', '<leader>X', '<cmd>bdelete!<CR>', { desc = 'Really close[X] the current buffer' })
+vim.keymap.set('n', '<leader>e', '<cmd>e .<CR>', { desc = 'Show diagnostic [e]rror messages' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -255,7 +260,11 @@ require('lazy').setup({
   -- keys can be used to configure plugin behavior/loading/etc.
   --
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
-  --
+
+  {
+    'numToStr/Comment.nvim',
+    opts = {},
+  },
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
@@ -724,14 +733,14 @@ require('lazy').setup({
         vim.lsp.enable(server_name)
       end
 
-      vim.lsp.config('gdscript', {
-        cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
-        name = 'godot',
-        filetypes = { 'godot', 'gd', 'gdscript' },
-        root_markers = { '.git' },
-      })
-
-      vim.lsp.enable 'gdscript'
+      -- vim.lsp.config('gdscript', {
+      --   cmd = vim.lsp.rpc.connect('127.0.0.1', 6005),
+      --   name = 'godot',
+      --   filetypes = { 'godot', 'gd', 'gdscript' },
+      --   root_markers = { '.git' },
+      -- })
+      --
+      -- vim.lsp.enable 'gdscript'
 
       -- Ensure the servers and tools above are installed
       --
@@ -768,31 +777,46 @@ require('lazy').setup({
         desc = '[F]ormat buffer',
       },
     },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
+    config = function()
+      require('conform').setup {
+        formatters = {
+          golines = {
+            command = 'golines',
+            args = { '-m', '120' },
+            stdin = true,
+          },
+          prettier = {
+            command = 'prettier',
+            args = { '--stdin-filepath', '$FILENAME', '--print-width', '120', '--prose-wrap', 'always' },
+            stdin = true,
+          },
+        },
+        notify_on_error = false,
+        formatters_by_ft = {
+          lua = { 'stylua' },
+          go = { 'gopls', 'gofumpt', 'golines', 'goimports-reviser' },
+          -- Conform can also run multiple formatters sequentially
+          -- python = { "isort", "black" },
+          --
+          -- You can use 'stop_after_first' to run the first available formatter from the list
+          -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        },
+        format_on_save = function(bufnr)
+          -- Disable "format_on_save lsp_fallback" for languages that don't
+          -- have a well standardized coding style. You can add additional
+          -- languages here or re-enable it for the disabled ones.
+          local disable_filetypes = { c = true, cpp = true }
+          if disable_filetypes[vim.bo[bufnr].filetype] then
+            return nil
+          else
+            return {
+              timeout_ms = 1000,
+              lsp_format = 'fallback',
+            }
+          end
+        end,
+      }
+    end,
   },
 
   { -- Autocompletion
@@ -937,6 +961,9 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
+      -- Pairs of things
+      require('mini.pairs').setup()
+
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -956,6 +983,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',

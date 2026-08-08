@@ -44,6 +44,60 @@ return {
     end,
   },
 
+  -- Splash Screen
+  {
+    'eoh-bse/minintro.nvim',
+    opts = { color = '#23993f' },
+    config = true,
+    lazy = false,
+  },
+
+  { -- Oil for file management
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {
+      view_options = {
+        show_hidden = true,
+      },
+    },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    lazy = false,
+  },
+
+  { -- zk for note taking
+    'zk-org/zk-nvim',
+    config = function()
+      local zk = require 'zk'
+      zk.setup {
+        picker = 'telescope',
+        lsp = {
+          config = {
+            name = 'zk',
+            cmd = { 'zk', 'lsp' },
+            filetypes = { 'markdown' },
+          },
+
+          auto_attach = {
+            enabled = true,
+          },
+        },
+      }
+
+      require('zk.commands').add('ZkDaily', function()
+        zk.new {
+          title = os.date '%Y-%m-%d',
+          dir = 'journal/daily',
+          open = true,
+        }
+      end, { desc = 'Create a new daily note' })
+
+      vim.keymap.set('n', '<leader>nn', "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>", { desc = '[N]ote [N]ew' })
+      vim.keymap.set('n', '<leader>nf', '<Cmd>ZkNotes<CR>', { desc = '[N]ote [F]ind' })
+      vim.keymap.set('n', '<leader>nt', '<Cmd>ZkTags<CR>', { desc = '[N]ote [T]ags' })
+    end,
+  },
+
   -- Flash
   {
     'folke/flash.nvim',
@@ -112,34 +166,34 @@ return {
   },
 
   -- File Tree
-  {
-    'nvim-tree/nvim-tree.lua',
-    opts = {
-      git = {
-        enable = true,
-        timeout = 2000,
-      },
-      view = {
-        width = 40,
-      },
-      renderer = {
-        highlight_git = true,
-        icons = {
-          show = {
-            git = true,
-          },
-        },
-      },
-      filters = {
-        dotfiles = false,
-        custom = {
-          '^.git$',
-          '.*.uid$',
-        },
-      },
-    },
-    lazy = false,
-  },
+  -- {
+  --   'nvim-tree/nvim-tree.lua',
+  --   opts = {
+  --     git = {
+  --       enable = true,
+  --       timeout = 2000,
+  --     },
+  --     view = {
+  --       width = 40,
+  --     },
+  --     renderer = {
+  --       highlight_git = true,
+  --       icons = {
+  --         show = {
+  --           git = true,
+  --         },
+  --       },
+  --     },
+  --     filters = {
+  --       dotfiles = false,
+  --       custom = {
+  --         '^.git$',
+  --         '.*.uid$',
+  --       },
+  --     },
+  --   },
+  --   lazy = false,
+  -- },
 
   -- LazyGit, tui for git
   {
@@ -267,7 +321,7 @@ return {
     init = function()
       vim.g.barbar_auto_setup = false
       vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<CR>', { desc = 'Close[x] the current buffer' })
-      vim.keymap.set('n', '<leader>X', '<cmd>BufferCloseAllButCurrent<CR>', { desc = 'Close[X] other buffers' })
+      -- vim.keymap.set('n', '<leader>X', '<cmd>BufferCloseAllButCurrent<CR>', { desc = 'Close[X] other buffers' })
       vim.keymap.set('n', '<Tab>', '<cmd>BufferNext<CR>', { desc = 'Next buffer' })
       vim.keymap.set('n', '<S-Tab>', '<cmd>BufferPrevious<CR>', { desc = 'Prev buffer' })
     end,

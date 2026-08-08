@@ -34,6 +34,6 @@ vim.keymap.set('n', '<S-Enter>', 'O<Esc>', { desc = 'insert line above' })
 vim.keymap.set('n', '<leader>x', '<cmd>BufferClose<CR>', { desc = 'Close[x] the current buffer' })
 vim.keymap.set('n', '<leader>X', '<cmd>BufferClose!<CR>', { desc = 'Super Close[X] the current buffer' })
 
-vim.cmd 'NvimTreeToggle'
+-- vim.cmd 'NvimTreeToggle'
 
 vim.keymap.set('n', 's', '<nop>', { desc = 'unmap "s" for easier surround usage' })

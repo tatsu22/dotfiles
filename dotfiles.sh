@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+mkdir -p ~/.local/bin/
+
 # Install in case this is a fresh computer
 echo "=================="
 echo "Installing apps..."
@@ -44,4 +46,14 @@ echo "Setting up tmux..."
 echo "=================="
 
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# Setup zk
+echo "=================="
+echo "Setting up tmux..."
+echo "=================="
+
+curl -Lo https://github.com/zk-org/zk/releases/download/v0.15.6/zk-v0.15.6-linux-amd64.tar.gz
+tar -xvf zk-v0.15.6-linux-amd64.tar.gz
+mv zk ~/.local/bin
+rm zk-v0.15.6-linux-amd64.tar.gz
 

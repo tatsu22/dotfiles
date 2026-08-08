@@ -244,7 +244,6 @@ return {
           return { timeout_ms = 1000, lsp_format = 'fallback' }
         end,
       }
-
       vim.api.nvim_create_user_command('FormatToggle', function()
         if vim.g.disable_autoformat == true then
           vim.g.disable_autoformat = false
@@ -256,6 +255,7 @@ return {
       })
     end,
   },
+
   -- Status Bar
   {
     'romgrk/barbar.nvim',
@@ -287,17 +287,17 @@ return {
   },
 
   -- Code Screenshots
-  {
-    'mistricky/codesnap.nvim',
-    build = 'make',
-    config = function()
-      require('codesnap').setup {
-        has_breadcrumbs = true,
-        bg_theme = 'grape',
-        watermark = '',
-      }
-    end,
-  },
+  -- {
+  --   'mistricky/codesnap.nvim',
+  --   build = 'make',
+  --   config = function()
+  --     require('codesnap').setup {
+  --       has_breadcrumbs = true,
+  --       bg_theme = 'grape',
+  --       watermark = '',
+  --     }
+  --   end,
+  -- },
 
   -- {
   --   'bakudankun/pico-8.vim',

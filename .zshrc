@@ -37,7 +37,9 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 export PATH=$PATH:/home/tyler/.local/nvim/bin
+export PATH=$PATH:/home/tyler/Apps/nvim/bin
 export PATH=$PATH:/home/tyler/.local/bin
+export PATH=$PATH:/home/tyler/go/bin
 export PATH=$PATH:/usr/local
 export PATH=$PATH:/usr/local/bin
 export PATH=$PATH:/usr/local/go/bin
@@ -49,5 +51,8 @@ export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/tyler/.
 function config {
    git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
 }
+
+export STARSHIP_CONFIG=~/.config/starship.toml
+prompt off
 
 eval "$(starship init zsh)"

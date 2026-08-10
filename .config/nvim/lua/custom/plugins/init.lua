@@ -148,22 +148,12 @@ return {
   },
 
   -- Smart commenting
-  {
-    'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup()
-
-      vim.keymap.set('n', '<C-c>', function()
-        require('Comment.api').toggle.linewise.current()
-      end, { desc = 'comment current line', noremap = true })
-      vim.keymap.set(
-        'v',
-        '<C-c>',
-        "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-        { desc = 'comment visual block', noremap = true }
-      )
-    end,
-  },
+  -- {
+  --   'numToStr/Comment.nvim',
+  --   opts = {
+  --     -- Your configuration options go here
+  --   },
+  -- },
 
   -- File Tree
   -- {

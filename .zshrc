@@ -43,6 +43,7 @@ export PATH=$PATH:/home/tyler/go/bin
 export PATH=$PATH:/usr/local
 export PATH=$PATH:/usr/local/bin
 export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:/home/tyler/.cargo/bin
 
 export XDG_DATA_DIRS=$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/tyler/.local/share/flatpak/exports/share
 

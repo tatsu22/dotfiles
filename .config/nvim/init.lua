@@ -147,5 +147,15 @@ require('vim._core.ui2').enable {}
 
 require 'tyler'
 
+vim.api.nvim_create_autocmd('BufReadPost', {
+  pattern = '*',
+  callback = function()
+    -- can start a specific treesitter on a specific buffer also
+    -- vim.treesitter.start(0, "c")
+    vim.treesitter.start()
+  end,
+  once = true,
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

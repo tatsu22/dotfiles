@@ -47,6 +47,12 @@ vim.o.timeoutlen = 300
 vim.o.splitright = true
 vim.o.splitbelow = true
 
+-- configure tabs
+vim.opt.tabstop = 4 -- Number of spaces that a <Tab> in the file counts for
+vim.opt.shiftwidth = 4 -- Size of an indent
+vim.opt.softtabstop = 4 -- Number of spaces that a <Tab> counts for while editing
+vim.opt.expandtab = true -- Use spaces instead of tabs
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
@@ -145,17 +151,29 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 require('vim._core.ui2').enable {}
 
-require 'tyler'
+function leave_snippet()
+  if
+    ((vim.v.event.old_mode == 's' and vim.v.event.new_mode == 'n') or vim.v.event.old_mode == 'i')
+    and require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()]
+    and not require('luasnip').session.jump_active
+  then
+    require('luasnip').unlink_current()
+  end
+end
 
-vim.api.nvim_create_autocmd('BufReadPost', {
-  pattern = '*',
-  callback = function()
-    -- can start a specific treesitter on a specific buffer also
-    -- vim.treesitter.start(0, "c")
-    vim.treesitter.start()
-  end,
-  once = true,
-})
+-- stop snippets when you leave to normal mode
+vim.api.nvim_command [[
+    autocmd ModeChanged * lua leave_snippet()
+]]
+
+-- Custom file types
+vim.filetype.add {
+  extension = {
+    kage = 'go',
+  },
+}
+
+require 'tyler'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
